@@ -149,4 +149,10 @@ public class EmployeeController {
         employeeService.update(employeeDTO);
         return Result.success();
     }
+
+    //TODO 员工修改密码
+    public Result passwordChange(@RequestBody EmployeeDTO employeeDTO) {
+        return Result.success();
+    }
+
 }
