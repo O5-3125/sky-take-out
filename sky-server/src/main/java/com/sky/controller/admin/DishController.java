@@ -111,6 +111,20 @@ public class DishController {
         dishService.save(dishDTO);
         return Result.success();
     }
+
+    /**
+     * 根据ids批量删除菜品
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    @ApiOperation("删除套餐")
+    public Result deleteBatch(@RequestParam List<Long> ids) {
+        log.info("删除套餐:{}", ids);
+        dishService.deleteBatch(ids);
+        return Result.success();
+    }
 }
 
 

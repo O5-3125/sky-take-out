@@ -11,6 +11,7 @@ import java.util.List;
 public interface DishService {
     /**
      * 分页查询
+     *
      * @param dishPageQueryDTO
      * @return
      */
@@ -18,6 +19,7 @@ public interface DishService {
 
     /**
      * 启用禁用菜品
+     *
      * @param status
      * @param id
      */
@@ -25,12 +27,14 @@ public interface DishService {
 
     /**
      * 修改菜品信息
+     *
      * @param dishDTO
      */
     void update(DishDTO dishDTO);
 
     /**
      * 根据id查询菜品信息
+     *
      * @param id
      * @return
      */
@@ -38,14 +42,24 @@ public interface DishService {
 
     /**
      * 新增菜品
+     *
      * @param dishDTO
      */
     void save(DishDTO dishDTO);
 
     /**
      * 根据分类id查询菜品信息
+     *
      * @param categoryId
      * @return
      */
     List<Dish> getByCategoryId(Long categoryId);
+
+    /**
+     * 根据ids批量删除菜品
+     *
+     * @param ids
+     * @return
+     */
+    void deleteBatch(List<Long> ids);
 }
