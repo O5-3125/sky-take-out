@@ -80,4 +80,12 @@ public interface DishMapper {
      */
     @Delete("DELETE from dish where id=#{id}")
     void delete(Long id);
+
+    /**
+     * 动态条件查询菜品
+     * @param dish
+     * @return
+     */
+    List<Dish> list(Dish dish);
+
 }
