@@ -7,36 +7,45 @@ import com.sky.service.AddressBookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
 @Slf4j
 public class AddressBookServiceImpl implements AddressBookService {
     @Autowired
-    public AddressBookMapper addressBookMapper;
+    private AddressBookMapper addressBookMapper;
 
     /**
-     * 添加地址
+     * 条件查询
+     *
+     * @param addressBook
+     * @return
+     */
+    public List<AddressBook> list(AddressBook addressBook) {
+        return addressBookMapper.list(addressBook);
+    }
+
+    /**
+     * 新增地址
      *
      * @param addressBook
      */
     public void save(AddressBook addressBook) {
-        Long userId = BaseContext.getCurrentId();
-        addressBook.setUserId(userId);
-
+        addressBook.setUserId(BaseContext.getCurrentId());
         addressBook.setIsDefault(0);
-
-        addressBookMapper.save(addressBook);
+        addressBookMapper.insert(addressBook);
     }
 
     /**
-     * 根据id删除地址
+     * 根据id查询
      *
      * @param id
+     * @return
      */
-    public void deleteById(Long id) {
-        addressBookMapper.deleteById(id);
+    public AddressBook getById(Long id) {
+        AddressBook addressBook = addressBookMapper.getById(id);
+        return addressBook;
     }
 
     /**
@@ -49,49 +58,29 @@ public class AddressBookServiceImpl implements AddressBookService {
     }
 
     /**
-     * 查询当前登录用户的所有地址信息
-     *
-     * @return
-     */
-    public List<AddressBook> list() {
-        Long userId = BaseContext.getCurrentId();
-        List<AddressBook> addressBookList = addressBookMapper.list(userId);
-        return addressBookList;
-    }
-
-    /**
-     * 根据id查询地址
-     *
-     * @param id
-     * @return
-     */
-    public AddressBook getById(Long id) {
-        AddressBook addressBook = addressBookMapper.getById(id);
-
-        return addressBook;
-    }
-
-    /**
      * 设置默认地址
      *
-     * @param id
-     * @return
+     * @param addressBook
      */
-    public void setDefault(Long id) {
-        addressBookMapper.setDefault(id);
+    @Transactional
+    public void setDefault(AddressBook addressBook) {
+        //1、将当前用户的所有地址修改为非默认地址 update address_book set is_default = ? where user_id = ?
+        addressBook.setIsDefault(0);
+        addressBook.setUserId(BaseContext.getCurrentId());
+        addressBookMapper.updateIsDefaultByUserId(addressBook);
+
+        //2、将当前地址改为默认地址 update address_book set is_default = ? where id = ?
+        addressBook.setIsDefault(1);
+        addressBookMapper.update(addressBook);
     }
 
     /**
-     * 获取默认地址
+     * 根据id删除地址
      *
-     * @return
+     * @param id
      */
-    public AddressBook getDefault() {
-        Long userId = BaseContext.getCurrentId();
-
-        AddressBook addressBook = addressBookMapper.getDefault(userId);
-
-        return addressBook;
+    public void deleteById(Long id) {
+        addressBookMapper.deleteById(id);
     }
 
 }
